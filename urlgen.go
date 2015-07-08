@@ -55,7 +55,7 @@ func GenerateAmazonUrl(api AmazonProductAPI, Operation string, Parameters map[st
 	}
 
 	result.Host = api.Host
-	result.Scheme = "http"
+	result.Scheme = "https"
 	result.Path = "/onca/xml"
 
 	values := url.Values{}
