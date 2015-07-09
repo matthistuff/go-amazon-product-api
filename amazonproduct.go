@@ -2,7 +2,6 @@
 package amazonproduct
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -84,24 +83,7 @@ func (api AmazonProductAPI) ItemSearch(SearchIndex string, Parameters map[string
 CartCreate takes a map containing ASINs and quantities. Up to 10 items are allowed
 */
 func (api AmazonProductAPI) CartCreate(items map[string]int) (string, error) {
-
-	params := make(map[string]string)
-
-	i := 1
-	for k, v := range items {
-		if i < 11 {
-			key := fmt.Sprintf("Item.%d.ASIN", i)
-			params[key] = string(k)
-
-			key = fmt.Sprintf("Item.%d.Quantity", i)
-			params[key] = strconv.Itoa(v)
-
-			i++
-		} else {
-			break
-		}
-	}
-	return api.genSignAndFetch("CartCreate", params)
+	return api.genSignAndFetch("CartCreate", CreateItemList(items))
 }
 
 /*
@@ -115,20 +97,10 @@ func (api AmazonProductAPI) CartAdd(items map[string]int, cartid, HMAC string) (
 		"HMAC":   HMAC,
 	}
 
-	i := 1
-	for k, v := range items {
-		if i < 11 {
-			key := fmt.Sprintf("Item.%d.ASIN", i)
-			params[key] = string(k)
-
-			key = fmt.Sprintf("Item.%d.Quantity", i)
-			params[key] = strconv.Itoa(v)
-
-			i++
-		} else {
-			break
-		}
+	for k, v := range CreateItemList(items) {
+		params[k] = v
 	}
+
 	return api.genSignAndFetch("CartAdd", params)
 }
 
