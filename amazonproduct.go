@@ -105,6 +105,23 @@ func (api AmazonProductAPI) CartAdd(items map[string]int, cartid, HMAC string) (
 }
 
 /*
+CartModify takes a map containing ASINs and quantities and updates them in the given cart.
+*/
+func (api AmazonProductAPI) CartModify(items map[string]int, cartid, HMAC string) (string, error) {
+
+	params := map[string]string{
+		"CartId": cartid,
+		"HMAC":   HMAC,
+	}
+
+	for k, v := range CreateItemList(items) {
+		params[k] = v
+	}
+
+	return api.genSignAndFetch("CartModify", params)
+}
+
+/*
 CartClear takes a CartId and HMAC that were returned when generating a cart
 It then removes the contents of the cart
 */
