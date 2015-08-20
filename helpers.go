@@ -5,10 +5,13 @@ import (
 )
 
 func idType(id string) string {
-	if len(id) == 10 {
+	switch len(id) {
+	case 10:
 		return "ASIN"
+	case 14:
+		return "CartItemId"
 	}
-
+	
 	return "OfferListingId"
 }
 
